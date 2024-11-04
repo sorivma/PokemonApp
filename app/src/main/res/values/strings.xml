@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">PokemonApp</string>
+    <string name="title_activity_main">MainActivity</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="more_text">Еще 100</string>
+    <string name="pokemon_image">Картинка с покемончиком\n</string>
+    <string name="abilities">Способности\n</string>
+    <string name="moves">Ходы\n</string>
+    <string name="show_n_more">Показать еще %s\n</string>
+    <string name="pokemon_stats">Статки</string>
+    <string name="pokemon_types">Элементные типы</string>
+</resources>
