@@ -28,6 +28,15 @@
             android:textStyle="bold"
             android:layout_marginTop="8dp"/>
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_marginTop="100dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="?android:attr/progressBarStyleLarge"
+            android:visibility="gone" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +48,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:id="@+id/pokemon_stats"/>
+            android:id="@+id/pokemon_stats"
+            android:visibility="gone"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -52,7 +62,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:id="@+id/pokemon_types"/>
+            android:id="@+id/pokemon_types"
+            android:visibility="gone"/>
 
         <!-- Pokémon Abilities -->
         <TextView
@@ -60,13 +71,14 @@
             android:layout_height="wrap_content"
             android:text="@string/abilities"
             android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/ability_chip_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"/>
+            android:layout_marginTop="4dp"
+            android:visibility="gone"/>
 
         <!-- Pokémon Moves -->
         <TextView
@@ -74,12 +86,13 @@
             android:layout_height="wrap_content"
             android:text="@string/moves"
             android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/move_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"/>
+            android:layout_marginTop="4dp"
+            android:visibility="gone"/>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

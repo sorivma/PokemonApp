@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -30,6 +30,7 @@ class FragmentPokemonDetail : Fragment() {
     private lateinit var moveChipGroup: ChipGroup
     private lateinit var pokemonStats: LinearLayout
     private lateinit var pokemonTypes: ChipGroup
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,16 +48,20 @@ class FragmentPokemonDetail : Fragment() {
         moveChipGroup = view.findViewById(R.id.move_list)
         pokemonStats = view.findViewById(R.id.pokemon_stats)
         pokemonTypes = view.findViewById(R.id.pokemon_types)
+        progressBar = view.findViewById(R.id.progressBar)
 
         val pokemon: Pokemon = args.pokemon
 
         Glide.with(this).load(pokemon.imageUrl).into(pokemonImage)
         pokemonName.text = pokemon.name
 
-        // Fetch additional details from ViewModel
+        progressBar.visibility = View.VISIBLE
+
         viewModel.getPokemonDetails(pokemon.id).observe(viewLifecycleOwner) { pokemonDetails ->
             if (pokemonDetails != null) {
                 displayPokemonDetails(pokemonDetails)
+
+                progressBar.visibility = View.GONE
             }
         }
     }
@@ -70,6 +75,7 @@ class FragmentPokemonDetail : Fragment() {
             }
             abilityChipGroup.addView(chip)
         }
+        abilityChipGroup.visibility = View.VISIBLE
 
         pokemonDetails.moves.take(10).forEach { move ->
             val chip = Chip(requireContext()).apply {
@@ -78,6 +84,7 @@ class FragmentPokemonDetail : Fragment() {
             }
             moveChipGroup.addView(chip)
         }
+        moveChipGroup.visibility = View.VISIBLE
 
         pokemonDetails.stats.forEach { stat ->
             val text = TextView(requireContext()).apply {
@@ -85,6 +92,7 @@ class FragmentPokemonDetail : Fragment() {
             }
             pokemonStats.addView(text)
         }
+        pokemonStats.visibility = View.VISIBLE
 
         pokemonDetails.types.forEach { type ->
             val chip = Chip(requireContext()).apply {
@@ -93,5 +101,6 @@ class FragmentPokemonDetail : Fragment() {
             }
             pokemonTypes.addView(chip)
         }
+        pokemonTypes.visibility = View.VISIBLE
     }
 }
