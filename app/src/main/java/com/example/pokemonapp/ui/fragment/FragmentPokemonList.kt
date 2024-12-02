@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.pokemonapp.R
 import com.example.pokemonapp.data.model.PokemonResponse
 import com.example.pokemonapp.data.service.PokeApiService
+import com.example.pokemonapp.databinding.FragmentPokemonListBinding
 import com.example.pokemonapp.ui.adapter.PokemonAdapter
 import retrofit2.Call
 import retrofit2.Callback
@@ -20,30 +18,29 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class FragmentPokemonList : Fragment() {
 
-    private lateinit var recyclerView: RecyclerView
+    private var _binding: FragmentPokemonListBinding? = null
+    private val binding get() = _binding ?: throw IllegalStateException("ViewBinding not initialized")
+
     private lateinit var adapter: PokemonAdapter
-    private lateinit var progressBar: ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_pokemon_list, container, false)
+    ): View {
+        _binding = FragmentPokemonListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        progressBar = view.findViewById(R.id.progressBar)
-
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         fetchPokemons()
     }
 
     private fun fetchPokemons() {
-        progressBar.visibility = View.VISIBLE
-        recyclerView.visibility = View.GONE
+        binding.progressBar.visibility = View.VISIBLE
+        binding.recyclerView.visibility = View.GONE
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://pokeapi.co/")
@@ -53,20 +50,25 @@ class FragmentPokemonList : Fragment() {
         val service = retrofit.create(PokeApiService::class.java)
         service.getPokemons().enqueue(object : Callback<PokemonResponse> {
             override fun onResponse(call: Call<PokemonResponse>, response: retrofit2.Response<PokemonResponse>) {
-                progressBar.visibility = View.GONE
-                response.body()?.let {
-                    adapter = PokemonAdapter(it.results.toMutableList()) { pokemon ->
+                binding.progressBar.visibility = View.GONE
+                response.body()?.let { pokemonResponse ->
+                    adapter = PokemonAdapter(pokemonResponse.results.toMutableList()) { pokemon ->
                         val action = FragmentPokemonListDirections.actionFragmentPokemonListToFragmentPokemonDetail(pokemon)
                         findNavController().navigate(action)
                     }
-                    recyclerView.adapter = adapter
-                    recyclerView.visibility = View.VISIBLE
+                    binding.recyclerView.adapter = adapter
+                    binding.recyclerView.visibility = View.VISIBLE
                 }
             }
 
             override fun onFailure(call: Call<PokemonResponse>, t: Throwable) {
-                // TODO
+                // TODO: Handle the error appropriately
             }
         })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
