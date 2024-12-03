@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/language_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_language"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Spinner
+        android:id="@+id/language_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/language_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/themeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/night_theme"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/language_spinner"
+        app:layout_constraintStart_toStartOf="@id/language_spinner"
+        app:layout_constraintEnd_toEndOf="@id/language_spinner"
+        android:layout_marginBottom="8dp" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/themeSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/themeTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/colorSwitchLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/change_toolbar_color"
+        app:layout_constraintTop_toBottomOf="@id/themeSwitch"
+        app:layout_constraintStart_toStartOf="@id/themeSwitch"
+        app:layout_constraintEnd_toEndOf="@id/themeSwitch"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"/>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/colorSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/colorSwitchLabel"
+        app:layout_constraintStart_toStartOf="@id/colorSwitchLabel"
+        app:layout_constraintEnd_toEndOf="@id/colorSwitchLabel"
+        />
+
+    <TextView
+        android:id="@+id/pokeFileText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintTop_toBottomOf="@id/colorSwitch"
+        app:layout_constraintStart_toStartOf="@id/colorSwitch"
+        app:layout_constraintEnd_toEndOf="@id/colorSwitch"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/deleteFileButton"
+        android:layout_width="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/pokeFileText"
+        app:layout_constraintStart_toStartOf="@id/pokeFileText"
+        app:layout_constraintEnd_toEndOf="@id/pokeFileText"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_pok_mon_file"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/restoreFileButton"
+        android:layout_width="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/deleteFileButton"
+        app:layout_constraintStart_toStartOf="@id/deleteFileButton"
+        app:layout_constraintEnd_toEndOf="@id/deleteFileButton"
+        android:layout_height="wrap_content"
+        android:text="@string/restore_ma_pokems"
+        android:layout_marginTop="16dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

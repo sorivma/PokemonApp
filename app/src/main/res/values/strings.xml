@@ -1,13 +1,21 @@
 <resources>
     <string name="app_name">PokemonApp</string>
     <string name="title_activity_main">MainActivity</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="more_text">Еще 100</string>
-    <string name="pokemon_image">Картинка с покемончиком\n</string>
-    <string name="abilities">Способности\n</string>
-    <string name="moves">Ходы\n</string>
-    <string name="show_n_more">Показать еще %s\n</string>
-    <string name="pokemon_stats">Статки</string>
-    <string name="pokemon_types">Элементные типы</string>
+    <string name="more_text">100 more</string>
+    <string name="pokemon_image">Pokemon picture\n</string>
+    <string name="abilities">Abilities\n</string>
+    <string name="moves">Moved\n</string>
+    <string name="show_n_more">Show %s more\n</string>
+    <string name="pokemon_stats">Stats</string>
+    <string name="pokemon_types">Elements</string>
+    <string name="language_label">Select Language</string>
+    <string name="language_english">English</string>
+    <string name="language_russian">Русский</string>
+    <string name="settings">Settings</string>
+    <string name="night_theme" >Night / Day mode</string>
+    <string name="select_language">Select Language</string>
+    <string name="change_toolbar_color">Dark - light toolbar</string>
+    <string name="delete_pok_mon_file">Delete Pokémon File</string>
+    <string name="restore_ma_pokems">Restore ma pokems</string>
 </resources>

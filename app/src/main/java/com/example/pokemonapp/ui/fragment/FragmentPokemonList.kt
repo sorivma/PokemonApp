@@ -1,12 +1,15 @@
 package com.example.pokemonapp.ui.fragment
 
 import android.os.Bundle
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.pokemonapp.data.model.Pokemon
 import com.example.pokemonapp.data.model.PokemonResponse
 import com.example.pokemonapp.data.service.PokeApiService
 import com.example.pokemonapp.databinding.FragmentPokemonListBinding
@@ -15,6 +18,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStreamWriter
 
 class FragmentPokemonList : Fragment() {
 
@@ -52,6 +59,7 @@ class FragmentPokemonList : Fragment() {
             override fun onResponse(call: Call<PokemonResponse>, response: retrofit2.Response<PokemonResponse>) {
                 binding.progressBar.visibility = View.GONE
                 response.body()?.let { pokemonResponse ->
+                    savePokemonsToFile(pokemonResponse.results)
                     adapter = PokemonAdapter(pokemonResponse.results.toMutableList()) { pokemon ->
                         val action = FragmentPokemonListDirections.actionFragmentPokemonListToFragmentPokemonDetail(pokemon)
                         findNavController().navigate(action)
@@ -62,9 +70,35 @@ class FragmentPokemonList : Fragment() {
             }
 
             override fun onFailure(call: Call<PokemonResponse>, t: Throwable) {
-                // TODO: Handle the error appropriately
+                if (isAdded) {
+                    Toast.makeText(requireContext(), "Could not fetch pokemons! + ${t.message}", Toast.LENGTH_LONG).show()
+                }
             }
         })
+    }
+
+    private fun savePokemonsToFile(pokemons: List<Pokemon>) {
+        val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+        val file = File(directory, "pokemons_dubrovskiAA.txt")
+
+        try {
+            val fileOutputStream = FileOutputStream(file)
+            val writer = OutputStreamWriter(fileOutputStream)
+
+
+            for (pokemon in pokemons) {
+                writer.write("$pokemon\n")
+            }
+
+
+            writer.close()
+            fileOutputStream.close()
+
+
+            Toast.makeText(requireContext(), "Pokemons saved successfully!", Toast.LENGTH_SHORT).show()
+        } catch (e: IOException) {
+            Toast.makeText(requireContext(), "Error saving Pokémon to file: ${e.message}", Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun onDestroyView() {
