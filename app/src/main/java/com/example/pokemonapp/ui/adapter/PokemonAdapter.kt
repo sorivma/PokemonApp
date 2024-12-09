@@ -11,7 +11,8 @@ import com.example.pokemonapp.databinding.ItemPokemonBinding
 class PokemonAdapter(
     private var pokemonList: MutableList<Pokemon>,
     private val onPokeClick: (Pokemon) -> Unit,
-    private val onEditClick: (Pokemon) -> Unit
+    private val onEditClick: (Pokemon) -> Unit,
+    private val onDeleteClick: (Pokemon) -> Unit
 ) : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
 
     inner class PokemonViewHolder(private val binding: ItemPokemonBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -26,6 +27,7 @@ class PokemonAdapter(
 
             binding.root.setOnClickListener { onPokeClick(pokemon) }
             binding.editPokeBtn.setOnClickListener { onEditClick(pokemon) }
+            binding.deletePokeBtn.setOnClickListener { onDeleteClick(pokemon) }
         }
     }
 

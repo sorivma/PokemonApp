@@ -76,6 +76,11 @@ class FragmentPokemonList : Fragment() {
                 val action = FragmentPokemonListDirections
                     .actionFragmentPokemonListToPokeEditFragment(pokemon)
                 findNavController().navigate(action)
+            },
+            onDeleteClick = { pokemon ->
+                lifecycleScope.launch {
+                    repository.deletePoke(pokemon.name)
+                }
             }
         )
 

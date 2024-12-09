@@ -19,6 +19,7 @@ class PokeEditFragment : Fragment() {
         get() = _binding ?: throw IllegalStateException("ViewBinding not initialized")
 
     private lateinit var repository: PokemonRepository
+    private lateinit var currentPokeName: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,11 +34,12 @@ class PokeEditFragment : Fragment() {
         repository = PokemonRepository.getInstance(requireContext())
 
         binding.pokeNameInput.setText(args.poke.name)
+        currentPokeName = args.poke.name
 
         binding.updatePokeBtn.setOnClickListener {
             lifecycleScope.launch {
-                repository.updatePokeName(args.poke.name, binding.pokeNameInput.text.toString())
-                navigateToList()
+                repository.updatePokeName(currentPokeName, binding.pokeNameInput.text.toString())
+                currentPokeName = binding.pokeNameInput.text.toString()
             }
         }
 

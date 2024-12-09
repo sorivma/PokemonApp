@@ -44,16 +44,28 @@
             android:textStyle="bold"
             android:gravity="center_vertical" />
 
-        <!-- Edit Button -->
-        <ImageButton
-            android:id="@+id/edit_poke_btn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/poke_edit_btn"
-            android:src="@drawable/poke_card_edit"
-            android:background="?attr/selectableItemBackgroundBorderless" />
+            android:layout_centerVertical="true">
+            <ImageButton
+                android:id="@+id/delete_poke_btn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:contentDescription="@string/delete_poke"
+                android:src="@drawable/poke_card_delete"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
+            <ImageButton
+                android:id="@+id/edit_poke_btn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:contentDescription="@string/poke_edit_btn"
+                android:src="@drawable/poke_card_edit"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+        </LinearLayout>
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
