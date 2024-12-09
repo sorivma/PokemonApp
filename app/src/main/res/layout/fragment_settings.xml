@@ -5,34 +5,15 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/language_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/select_language"
-        android:textSize="18sp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Spinner
-        android:id="@+id/language_spinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/language_label"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
-
-    <TextView
         android:id="@+id/themeTextView"
+        android:paddingTop="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/night_theme"
         android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/language_spinner"
-        app:layout_constraintStart_toStartOf="@id/language_spinner"
-        app:layout_constraintEnd_toEndOf="@id/language_spinner"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="8dp" />
 
     <androidx.appcompat.widget.SwitchCompat

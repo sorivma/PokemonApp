@@ -1,34 +1,36 @@
 package com.example.pokemonapp.ui.fragment
 
 import android.os.Bundle
-import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.pokemonapp.data.model.Pokemon
-import com.example.pokemonapp.data.model.PokemonResponse
+import com.example.pokemonapp.data.room.PokemonRepository
 import com.example.pokemonapp.data.service.PokeApiService
+import com.example.pokemonapp.data.service.RetrofitInstance
 import com.example.pokemonapp.databinding.FragmentPokemonListBinding
 import com.example.pokemonapp.ui.adapter.PokemonAdapter
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.OutputStreamWriter
+import com.example.pokemonapp.ui.viewmodel.PokemonViewModel
+import com.example.pokemonapp.ui.viewmodel.factory.PokemonViewModelFactory
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class FragmentPokemonList : Fragment() {
-
     private var _binding: FragmentPokemonListBinding? = null
-    private val binding get() = _binding ?: throw IllegalStateException("ViewBinding not initialized")
+    private val binding
+        get() = _binding ?: throw IllegalStateException("ViewBinding not initialized")
 
     private lateinit var adapter: PokemonAdapter
+    private lateinit var repository: PokemonRepository
+    private lateinit var apiService: PokeApiService
+    private val viewModel: PokemonViewModel by viewModels {
+        PokemonViewModelFactory(repository, apiService)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,63 +43,77 @@ class FragmentPokemonList : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupViewModel()
+        setupRecyclerView()
+        setupSwipeRefresh()
+
+        binding.buttonPrev.setOnClickListener {
+            viewModel.prevPage()
+        }
+
+        binding.buttonNext.setOnClickListener {
+            viewModel.nextPage()
+        }
+
+        observePokemons()
+        observeBackBtnEnabled()
+    }
+
+    private fun setupViewModel() {
+        repository = PokemonRepository.getInstance(requireContext())
+        apiService = RetrofitInstance.apiService
+    }
+
+    private fun setupRecyclerView() {
+        adapter = PokemonAdapter(
+            mutableListOf(),
+            onPokeClick = { pokemon ->
+                val action = FragmentPokemonListDirections
+                    .actionFragmentPokemonListToFragmentPokemonDetail(pokemon)
+                findNavController().navigate(action)
+            },
+            onEditClick = { pokemon ->
+                val action = FragmentPokemonListDirections
+                    .actionFragmentPokemonListToPokeEditFragment(pokemon)
+                findNavController().navigate(action)
+            }
+        )
+
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        fetchPokemons()
+        binding.recyclerView.adapter = adapter
     }
 
-    private fun fetchPokemons() {
-        binding.progressBar.visibility = View.VISIBLE
-        binding.recyclerView.visibility = View.GONE
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://pokeapi.co/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val service = retrofit.create(PokeApiService::class.java)
-        service.getPokemons().enqueue(object : Callback<PokemonResponse> {
-            override fun onResponse(call: Call<PokemonResponse>, response: retrofit2.Response<PokemonResponse>) {
-                binding.progressBar.visibility = View.GONE
-                response.body()?.let { pokemonResponse ->
-                    savePokemonsToFile(pokemonResponse.results)
-                    adapter = PokemonAdapter(pokemonResponse.results.toMutableList()) { pokemon ->
-                        val action = FragmentPokemonListDirections.actionFragmentPokemonListToFragmentPokemonDetail(pokemon)
-                        findNavController().navigate(action)
-                    }
-                    binding.recyclerView.adapter = adapter
-                    binding.recyclerView.visibility = View.VISIBLE
-                }
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            if (isRecyclerViewAtTop()) {
+                viewModel.fetchPokemonsFromApi()
             }
-
-            override fun onFailure(call: Call<PokemonResponse>, t: Throwable) {
-                if (isAdded) {
-                    Toast.makeText(requireContext(), "Could not fetch pokemons! + ${t.message}", Toast.LENGTH_LONG).show()
-                }
-            }
-        })
+            binding.swipeRefresh.isRefreshing = false
+        }
     }
 
-    private fun savePokemonsToFile(pokemons: List<Pokemon>) {
-        val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-        val file = File(directory, "pokemons_dubrovskiAA.txt")
+    private fun observePokemons() {
+        lifecycleScope.launch {
+            viewModel.pokemons.collect { pokemons ->
+                adapter.addPokemons(pokemons)
+                Log.i("FragmentPokemonList", "The pokemon list updated")
 
-        try {
-            val fileOutputStream = FileOutputStream(file)
-            val writer = OutputStreamWriter(fileOutputStream)
-
-
-            for (pokemon in pokemons) {
-                writer.write("$pokemon\n")
+                if (pokemons.isEmpty()) {
+                    viewModel.fetchPokemonsFromApi()
+                }
             }
+        }
+    }
 
-
-            writer.close()
-            fileOutputStream.close()
-
-
-            Toast.makeText(requireContext(), "Pokemons saved successfully!", Toast.LENGTH_SHORT).show()
-        } catch (e: IOException) {
-            Toast.makeText(requireContext(), "Error saving Pokémon to file: ${e.message}", Toast.LENGTH_LONG).show()
+    private fun observeBackBtnEnabled() {
+        lifecycleScope.launch {
+            viewModel.currentPage.collectLatest { currentPage ->
+                if (currentPage == 0) {
+                    binding.buttonPrev.isEnabled = false
+                } else {
+                    binding.buttonPrev.isEnabled = true
+                }
+            }
         }
     }
 
@@ -105,4 +121,10 @@ class FragmentPokemonList : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun isRecyclerViewAtTop(): Boolean {
+        return (binding.recyclerView.layoutManager as? LinearLayoutManager)
+            ?.findFirstCompletelyVisibleItemPosition() == 0
+    }
 }
+

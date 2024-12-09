@@ -1,8 +1,7 @@
 package com.example.pokemonapp.ui.fragment
 
 import android.annotation.SuppressLint
-import android.app.LocaleManager
-import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -14,12 +13,8 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.pokemonapp.R
@@ -40,9 +35,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private lateinit var darkColor: String
     private lateinit var lightColor: String
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private lateinit var localeManager: LocaleManager
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,8 +46,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        localeManager = requireContext().getSystemService(LocaleManager::class.java)
 
         darkColor = getColorHex(R.color.teal_700)
         lightColor = getColorHex(R.color.teal_200)
@@ -75,7 +65,10 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     }
 
     private fun saveFileToInternalStorage() {
-        val externalFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "pokemons_dubrovskiAA.txt")
+        val externalFile = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
+            "pokemons_dubrovskiAA.txt"
+        )
         if (externalFile.exists()) {
             try {
                 val internalFile = File(requireContext().filesDir, "pokemons_dubrovskiAA.txt")
@@ -88,9 +81,17 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                         }
                     }
                 }
-                Toast.makeText(requireContext(), "Pokémon file saved to internal storage.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Pokémon file saved to internal storage.",
+                    Toast.LENGTH_SHORT
+                ).show()
             } catch (e: IOException) {
-                Toast.makeText(requireContext(), "Error saving file: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Error saving file: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -100,7 +101,10 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
         if (internalFile.exists()) {
             try {
-                val externalFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "pokemons_dubrovskiAA.txt")
+                val externalFile = File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
+                    "pokemons_dubrovskiAA.txt"
+                )
                 internalFile.inputStream().use { inputStream ->
                     FileOutputStream(externalFile).use { outputStream ->
                         val buffer = ByteArray(1024)
@@ -110,10 +114,18 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                         }
                     }
                 }
-                Toast.makeText(requireContext(), "Pokémon file restored to external storage.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Pokémon file restored to external storage.",
+                    Toast.LENGTH_SHORT
+                ).show()
                 displayPokeInfo()  // Обновляем информацию о файле
             } catch (e: IOException) {
-                Toast.makeText(requireContext(), "Error restoring file: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Error restoring file: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         } else {
             Toast.makeText(requireContext(), "No backup file found.", Toast.LENGTH_SHORT).show()
@@ -123,18 +135,30 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     @SuppressLint("SetTextI18n")
     private fun deletePokemonsFile() {
-        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "pokemons_dubrovskiAA.txt")
+        val file = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
+            "pokemons_dubrovskiAA.txt"
+        )
 
         if (file.exists()) {
             val isDeleted = file.delete()
             if (isDeleted) {
-                Toast.makeText(requireContext(), "Pokémon file deleted successfully.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Pokémon file deleted successfully.",
+                    Toast.LENGTH_SHORT
+                ).show()
                 binding.pokeFileText.text = "No Pokémon file found."
             } else {
-                Toast.makeText(requireContext(), "Failed to delete Pokémon file.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Failed to delete Pokémon file.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         } else {
-            Toast.makeText(requireContext(), "No Pokémon file found to delete.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "No Pokémon file found to delete.", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -170,7 +194,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                 count = lines.count()
             }
         } catch (e: IOException) {
-            Toast.makeText(requireContext(), "Error reading file: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Error reading file: ${e.message}", Toast.LENGTH_SHORT)
+                .show()
         }
         return count
     }
@@ -213,30 +238,21 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     }
 
     private fun setupNightThemeSwitch() {
-        lifecycleScope.launch {
-            dataStore.data.map { prefs ->
-                prefs[PreferenceKeys.NIGHT_THEME_PREFERENCE] ?: false
-            }.collect { isNightMode ->
-                binding.themeSwitch.isChecked = isNightMode
-            }
-        }
+        val pref =
+            requireContext().getSharedPreferences(SharedPreferencesKeys.NIGHT_MODE, MODE_PRIVATE)
 
-        binding.themeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            lifecycleScope.launch {
-                saveNightThemePreference(isChecked)
-            }
-        }
-    }
+        val isNightMode = pref.getBoolean(SharedPreferencesKeys.NIGHT_MODE, false)
 
+        binding.themeSwitch.isChecked = isNightMode
 
-    private suspend fun saveNightThemePreference(checked: Boolean) {
-        dataStore.edit { prefs ->
-            prefs[PreferenceKeys.NIGHT_THEME_PREFERENCE] = checked
+        binding.themeSwitch.setOnCheckedChangeListener { _, b ->
+            val editor = requireContext().getSharedPreferences(SharedPreferencesKeys.NIGHT_MODE, MODE_PRIVATE).edit()
+            editor.putBoolean(SharedPreferencesKeys.NIGHT_MODE, b)
+            editor.apply()
         }
     }
 
     object PreferenceKeys {
-        val NIGHT_THEME_PREFERENCE = booleanPreferencesKey("night_mode")
         val TOOLBAR_COLOR_PREFERENCE = stringPreferencesKey("toolbar_color")
     }
 
@@ -244,5 +260,9 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         val color = ContextCompat.getColor(requireContext(), resourceId)
 
         return String.format("#%06X", (0xFFFFFF and color))
+    }
+
+    object SharedPreferencesKeys {
+        const val NIGHT_MODE = "night_mode"
     }
 }

@@ -5,6 +5,8 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
 }
 
+kapt.correctErrorTypes = true
+
 android {
     namespace = "com.example.pokemonapp"
     compileSdk = 34
@@ -52,11 +54,21 @@ dependencies {
 
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+
     //noinspection KaptUsageInsteadOfKsp
     kapt(libs.compiler)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.cardview)
+    implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.kotlin.stdlib)
+
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    //noinspection KaptUsageInsteadOfKsp
+    kapt(libs.androidx.room.compiler)
 
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.material)

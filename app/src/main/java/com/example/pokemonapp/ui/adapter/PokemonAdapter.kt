@@ -9,8 +9,9 @@ import com.example.pokemonapp.data.model.Pokemon
 import com.example.pokemonapp.databinding.ItemPokemonBinding
 
 class PokemonAdapter(
-    private val pokemonList: MutableList<Pokemon>,
-    private val onClick: (Pokemon) -> Unit
+    private var pokemonList: MutableList<Pokemon>,
+    private val onPokeClick: (Pokemon) -> Unit,
+    private val onEditClick: (Pokemon) -> Unit
 ) : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
 
     inner class PokemonViewHolder(private val binding: ItemPokemonBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -23,7 +24,8 @@ class PokemonAdapter(
                 .error(R.drawable.ic_error)
                 .into(binding.pokemonImage)
 
-            binding.root.setOnClickListener { onClick(pokemon) }
+            binding.root.setOnClickListener { onPokeClick(pokemon) }
+            binding.editPokeBtn.setOnClickListener { onEditClick(pokemon) }
         }
     }
 
@@ -37,4 +39,9 @@ class PokemonAdapter(
     }
 
     override fun getItemCount(): Int = pokemonList.size
+
+    fun addPokemons(newPokemons: List<Pokemon>) {
+        pokemonList = newPokemons.toMutableList()
+        notifyDataSetChanged()
+    }
 }

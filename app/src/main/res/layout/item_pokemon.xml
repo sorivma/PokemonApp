@@ -3,40 +3,57 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="125dp"
     android:layout_margin="8dp"
     app:cardElevation="4dp"
     app:cardCornerRadius="8dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:padding="16dp">
 
+        <!-- Pokemon Image -->
         <ImageView
             android:id="@+id/pokemon_image"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_gravity="center"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:importantForAccessibility="no"
             android:scaleType="fitCenter" />
 
+        <!-- Divider -->
         <View
+            android:id="@+id/divider"
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/grey"
-            android:layout_marginStart="10dp"/>
+            android:layout_toEndOf="@id/pokemon_image"
+            android:layout_marginStart="10dp"
+            android:background="@color/grey" />
 
+        <!-- Pokemon Name -->
         <TextView
-            android:layout_marginLeft="25dp"
             android:id="@+id/pokemon_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_toEndOf="@id/divider"
+            android:layout_marginStart="25dp"
+            android:layout_centerVertical="true"
             android:textSize="25sp"
             android:textStyle="bold"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical"/>
-    </LinearLayout>
+            android:gravity="center_vertical" />
+
+        <!-- Edit Button -->
+        <ImageButton
+            android:id="@+id/edit_poke_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/poke_edit_btn"
+            android:src="@drawable/poke_card_edit"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+    </RelativeLayout>
+
 </androidx.cardview.widget.CardView>

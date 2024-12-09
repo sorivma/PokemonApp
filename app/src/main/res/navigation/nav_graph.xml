@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/fragmentPokemonList">
+    app:startDestination="@id/onboardFragment">
     <fragment
         android:id="@+id/fragmentPokemonList"
         android:name="com.example.pokemonapp.ui.fragment.FragmentPokemonList"
@@ -13,6 +14,9 @@
         <action
             android:id="@+id/action_fragmentPokemonList_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_fragmentPokemonList_to_pokeEditFragment"
+            app:destination="@id/pokeEditFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragmentPokemonDetail"
@@ -26,4 +30,49 @@
         android:id="@+id/settingsFragment"
         android:name="com.example.pokemonapp.ui.fragment.SettingsFragment"
         android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/onboardFragment"
+        android:name="com.example.demoapp.ui.fragments.OnboardFragment"
+        android:label="OnboardFragment" >
+        <action
+            android:id="@+id/action_onboardFragment_to_signInFragment2"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.pokemonapp.ui.fragment.SignInFragment"
+        android:label="SignInFragment" >
+        <action
+            android:id="@+id/action_signInFragment_to_fragmentPokemonList2"
+            app:destination="@id/fragmentPokemonList"
+            app:popUpTo="@id/onboardFragment"/>
+        <action
+            android:id="@+id/action_signInFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <argument
+            android:name="user"
+            app:argType="com.example.pokemonapp.data.model.User"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.pokemonapp.ui.fragment.SignUpFragment"
+        android:label="SignUpFragment" >
+        <action
+            android:id="@+id/action_signUpFragment_to_signInFragment"
+            app:destination="@id/signInFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/pokeEditFragment"
+        android:name="com.example.pokemonapp.ui.fragment.PokeEditFragment"
+        android:label="fragment_poke_edit"
+        tools:layout="@layout/fragment_poke_edit" >
+        <argument
+            android:name="poke"
+            app:argType="com.example.pokemonapp.data.model.Pokemon" />
+        <action
+            android:id="@+id/action_pokeEditFragment_to_fragmentPokemonList"
+            app:destination="@id/fragmentPokemonList" />
+    </fragment>
 </navigation>

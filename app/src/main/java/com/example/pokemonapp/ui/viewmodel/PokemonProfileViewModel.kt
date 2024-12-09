@@ -9,8 +9,6 @@ import com.example.pokemonapp.data.service.PokeApiService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.logging.Level
-import java.util.logging.Logger
 
 class PokemonProfileViewModel: ViewModel() {
     private val _pokemonDetails = MutableLiveData<PokemonDetails?>()
