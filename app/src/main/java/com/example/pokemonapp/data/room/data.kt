@@ -9,7 +9,6 @@ import com.example.pokemonapp.data.model.PokemonResponse
 import com.example.pokemonapp.data.room.dao.PokemonDao
 import com.example.pokemonapp.data.room.entity.PokemonEntity
 import com.example.pokemonapp.data.service.PokeApiService
-import com.example.pokemonapp.data.service.RetrofitInstance
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import retrofit2.Call
@@ -71,7 +70,7 @@ class PokemonRepository(private val dao: PokemonDao) {
                 val database = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "pokemon_database"
+                    "poke_database"
                 ).build()
 
                 val dao = database.pokemonDao()

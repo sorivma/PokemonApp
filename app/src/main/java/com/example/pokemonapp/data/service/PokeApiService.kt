@@ -13,7 +13,7 @@ interface PokeApiService {
     @GET("api/v2/pokemon?limit=100")
     fun getPokemons(
         @Query("offset") offset: Int = 0,
-        @Query("limit") limit: Int = 100
+        @Query("limit") limit: Int = 10
     ): Call<PokemonResponse>
 
     @GET("api/v2/pokemon/{id}")
